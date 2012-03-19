@@ -1,1 +1,1 @@
-require '../lib/formula_dsl'
+require './lib/formula_dsl'
