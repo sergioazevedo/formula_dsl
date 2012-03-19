@@ -4,6 +4,18 @@ require 'spec_helper'
 describe FormulaParser do
 
   let(:parser){ subject }
+  it "should recognize multiply operations" do
+    parser.parse('2*5').to_s.should == '2*5'
+  end
+  it "should recognize division operations" do
+    parser.parse('2/5').to_s.should == '2/5'
+  end
+  it "should recognize sum operations" do
+    parser.parse('2+5').to_s.should == '2+5'
+  end
+  it "should recognize subtract operations" do
+    parser.parse('2-5').to_s.should == '2-5'
+  end
 
   context "For single binary operations like '2 + 2' " do
     it "should recognize '1+1' as a valid expression" do

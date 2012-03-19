@@ -14,7 +14,7 @@ class FormulaParser < Parslet::Parser
   end
 
   rule :operator do
-    match( ['+'] )
+    match(['+ * /']) | match('-')
   end
 
   rule :expression do
