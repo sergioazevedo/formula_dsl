@@ -18,8 +18,8 @@ describe FormulaParser do
       lambda{ parser.parse("1 + 2") }.should_not raise_error
     end
 
-    it "should recognize a valid expression with blank spaces like '  4 +   3  '" do
-      lambda{ parser.parse("  4 +  3  ") }.should_not raise_error
+    it "should recognize a valid expression with blank spaces like '  4   +   3  '" do
+      lambda{ parser.parse("  4   +  3  ") }.should_not raise_error
     end
   end
 
