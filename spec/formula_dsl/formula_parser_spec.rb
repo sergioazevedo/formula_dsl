@@ -35,4 +35,15 @@ describe FormulaParser do
     end
   end
 
+  context "With a more complex expression like '2 + 5 - 3' " do
+    it "should recognize '2 + 5 - 3' as a valid expression" do
+      lambda{ parser.parse( "2 + 5 -3") }.should_not raise_error(Parslet::ParseFailed)
+    end
+
+    it "should raise error a incomplet expression like '1 + 5 *" do
+      lambda{ parser.parse("1 + 5 *") }.should raise_error(Parslet::ParseFailed)
+    end
+
+  end
+
 end
