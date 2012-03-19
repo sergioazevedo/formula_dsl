@@ -18,7 +18,7 @@ class FormulaParser < Parslet::Parser
   end
 
   rule :expression do
-    number >> space? >> operator >> space? >> number
+    space? >> number >> space? >> operator >> space? >> number >> space?
   end
 
   root :expression
