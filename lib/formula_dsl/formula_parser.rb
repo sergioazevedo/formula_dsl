@@ -22,11 +22,19 @@ class FormulaParser < Parslet::Parser
     (addition | number).as(:right)
   end
 
+  rule :multiplication do
+    (left_term >> mult_operator >> right_term).as(:*)
+  end
+
   rule :addition do
     (left_term >> add_operator >> right_term).as(:+)
   end
 
-  root :addition
+  rule :expression do
+    addition | multiplication
+  end
+
+  root :expression
 end
 
 #  expression = left_side operator rigth_side

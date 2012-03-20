@@ -6,11 +6,11 @@ describe FormulaParser do
   let(:parser){ subject }
 
   context "For simple expressions (without functions)" do
-    # it "should recognize multiply operations" do
-    #   ast = parser.parse('2*5')
-    #   ast[:*][:left].to_i.should == 2
-    #   ast[:*][:right].to_i.should == 5
-    # end
+    it "should recognize multiply operations" do
+      ast = parser.parse('2*5')
+      ast[:*][:left].to_i.should == 2
+      ast[:*][:right].to_i.should == 5
+    end
     # it "should recognize division operations" do
     #   ast = parser.parse('2/5')
     #   ast[:/][:left].to_i.should == 2
