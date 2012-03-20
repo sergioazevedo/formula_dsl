@@ -19,11 +19,11 @@ class FormulaParser < Parslet::Parser
   end
 
   rule :addition do
-    (number.as(:left) >> add_operator >> (addition | multiplication | number).as(:right)).as(:+)
+    (number.as(:left) >> add_operator >> ( single_operations ).as(:right)).as(:+)
   end
 
   rule :multiplication_expression do
-    ( multiplication.as(:left) >> add_operator >> (addition | number).as(:right) ).as(:+)
+    ( ( single_operations ).as(:left) >> add_operator >> (addition | number).as(:right) ).as(:+)
   end
 
   rule :addition_expression do
@@ -35,7 +35,7 @@ class FormulaParser < Parslet::Parser
   end
 
   rule :single_operations do
-    addition | multiplication
+    addition | multiplication | number
   end
 
   rule :list do

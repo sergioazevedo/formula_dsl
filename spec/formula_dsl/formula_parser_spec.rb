@@ -59,6 +59,8 @@ describe FormulaParser do
       puts ast.inspect
       ast = parser.parse('2*5*5')
       puts ast.inspect
+      ast = parser.parse('1+3+4+1+30*50+10+4+5')
+      puts ast
 
       # ast[:+][:left].should be_a Hash
       # ast[:+][:right].to_i should == 10
