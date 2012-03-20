@@ -14,27 +14,35 @@ class FormulaParser < Parslet::Parser
   rule(:mult_operator) { match(['*']) }
   rule(:div_operator ) { match(['/']) }
 
-  rule :left_term do
-    (number).as(:left)
-  end
-
-  rule :right_term do
-    (expression | number).as(:right)
-  end
-
   rule :multiplication do
-    (left_term >> mult_operator >> right_term).as(:*)
+    (number.as(:left) >> mult_operator >> (multiplication | number).as(:right)).as(:*)
   end
 
   rule :addition do
-    (left_term >> add_operator >> right_term).as(:+)
+    (number.as(:left) >> add_operator >> (addition | multiplication | number).as(:right)).as(:+)
+  end
+
+  rule :multiplication_expression do
+    ( multiplication.as(:left) >> add_operator >> (addition | number).as(:right) ).as(:+)
+  end
+
+  rule :addition_expression do
+    ( addition >> mult_operator >> (multiplication | number).as(:right) )
   end
 
   rule :expression do
+     multiplication_expression | addition_expression
+  end
+
+  rule :single_operations do
     addition | multiplication
   end
 
-  root :expression
+  rule :list do
+    expression | single_operations
+  end
+
+  root :list
 end
 
 #  expression = left_side operator rigth_side

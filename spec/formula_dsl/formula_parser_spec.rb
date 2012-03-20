@@ -6,41 +6,67 @@ describe FormulaParser do
   let(:parser){ subject }
 
   context "For simple expressions (without functions)" do
-    it "should recognize multiply operations" do
-      ast = parser.parse('2*5')
-      ast[:*][:left].to_i.should == 2
-      ast[:*][:right].to_i.should == 5
-    end
+    # it "should recognize multiply operations" do
+    #   ast = parser.parse('2*5')
+    #   ast[:*][:left].to_i.should == 2
+    #   ast[:*][:right].to_i.should == 5
+    # end
     # it "should recognize division operations" do
     #   ast = parser.parse('2/5')
     #   ast[:/][:left].to_i.should == 2
     #   ast[:/][:right].to_i.should == 5
     # end
-    it "should recognize sum operations" do
-      ast = parser.parse('2+5')
-      ast[:+][:left].to_i.should == 2
-      ast[:+][:right].to_i.should == 5
-    end
+  #   it "should recognize sum operations" do
+  #     ast = parser.parse('2+5')
+  #     ast[:+][:left].to_i.should == 2
+  #     ast[:+][:right].to_i.should == 5
+  #   end
   end
 
   context "For more complex expressions (without functions)" do
-    it "should recognize 2+5+10" do
+    # it "should recognize 2+5+10" do
+    #   ast = parser.parse('2+5+10')
+    #   ast[:+][:left].to_i.should == 2
+    #   ast[:+][:right].should be_a Hash
+    #   ast[:+][:right][:+].should_not nil
+    #   ast[:+][:right][:+][:left].to_i.should == 5
+    #   ast[:+][:right][:+][:right].to_i.should == 10
+    # end
+
+    # it "should recognize 2*5*10" do
+    #   ast = parser.parse('2*5*10')
+    #   ast[:*][:left].to_i.should == 2
+    #   ast[:*][:right].should be_a Hash
+    #   ast[:*][:right][:*].should_not nil
+    #   ast[:*][:right][:*][:left].to_i.should == 5
+    #   ast[:*][:right][:*][:right].to_i.should == 10
+    # end
+
+    it "should recognize 2*5+10" do
+      ast = parser.parse('2+5')
+      puts ast.inspect
       ast = parser.parse('2+5+10')
-      ast[:+][:left].to_i.should == 2
-      ast[:+][:right].should be_a Hash
-      ast[:+][:right][:+].should_not nil
-      ast[:+][:right][:+][:left].to_i.should == 5
-      ast[:+][:right][:+][:right].to_i.should == 10
+      puts ast.inspect
+      ast = parser.parse('2*5')
+      puts ast.inspect
+      ast = parser.parse('2*5+10')
+      puts ast.inspect
+      ast = parser.parse('2*5+10+8')
+      puts ast.inspect
+      ast = parser.parse('2*5*2+10+8')
+      puts ast.inspect
+      ast = parser.parse('2+4*10')
+      puts ast.inspect
+      ast = parser.parse('2*5*5')
+      puts ast.inspect
+
+      # ast[:+][:left].should be_a Hash
+      # ast[:+][:right].to_i should == 10
+      # ast[:+][:right][:*].should_not nil
+      # ast[:+][:right][:*][:left].to_i.should == 2
+      # ast[:+][:right][:*][:right].to_i.should == 5
     end
 
-    it "should recognize 2*5*10" do
-      ast = parser.parse('2*5*10')
-      ast[:*][:left].to_i.should == 2
-      ast[:*][:right].should be_a Hash
-      ast[:*][:right][:*].should_not nil
-      ast[:*][:right][:*][:left].to_i.should == 5
-      ast[:*][:right][:*][:right].to_i.should == 10
-    end
 
   end
 
