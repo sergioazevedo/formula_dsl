@@ -14,33 +14,19 @@ class FormulaParser < Parslet::Parser
   rule(:mult_operator) { match(['*']) }
   rule(:div_operator ) { match(['/']) }
 
-  rule :multiplication do
-    (number.as(:left) >> space? >> mult_operator >> space? >> number.as(:right)).as(:*)
+  rule :left_term do
+    (number).as(:left)
   end
 
-  rule :division do
-    (number.as(:left) >> space? >> div_operator >> space? >> number.as(:right)).as(:/)
+  rule :right_term do
+    (addition | number).as(:right)
   end
 
   rule :addition do
-    (number.as(:left) >> space? >> add_operator >> space? >> number.as(:right)).as(:+)
+    (left_term >> add_operator >> right_term).as(:+)
   end
 
-  rule :subtraction do
-    (number.as(:left) >> space? >> sub_operator >> space? >> number.as(:right)).as(:-)
-  end
-
-  #expressions
-  rule :binary_expression do
-    ( addition | subtraction | multiplication | division)
-  end
-
-  rule :expression do
-    space? >> (binary_expression) >> space?
-  end
-
-  root :expression
-
+  root :addition
 end
 
 #  expression = left_side operator rigth_side
