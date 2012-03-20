@@ -5,16 +5,30 @@ describe FormulaParser do
 
   let(:parser){ subject }
   it "should recognize multiply operations" do
-    parser.parse('2*5').to_s.should == '2*5'
+    ast = parser.parse('2*5')
+    puts ast.inspect
+    ast[:left].to_i.should == 2
+    ast[:operator].to_s.should == '*'
+    ast[:right].to_i.should == 5
   end
   it "should recognize division operations" do
-    parser.parse('2/5').to_s.should == '2/5'
+    ast = parser.parse('2/5')
+    ast[:left].to_i.should == 2
+    ast[:operator].to_s.should == '/'
+    ast[:right].to_i.should == 5
   end
   it "should recognize sum operations" do
-    parser.parse('2+5').to_s.should == '2+5'
+    ast = parser.parse('2+5')
+    ast[:left].to_i.should == 2
+    ast[:operator].to_s.should == '+'
+    ast[:right].to_i.should == 5
   end
   it "should recognize subtract operations" do
-    parser.parse('2-5').to_s.should == '2-5'
+    ast = parser.parse('2-5')
+    ast[:left].to_i.should == 2
+    ast[:operator].to_s.should == '-'
+    ast[:right].to_i.should == 5
+
   end
 
   context "For single binary operations like '2 + 2' " do
