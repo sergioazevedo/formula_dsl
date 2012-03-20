@@ -21,11 +21,15 @@ class FormulaParser < Parslet::Parser
     number.as(:left) >> space? >> binary_operator.as(:operator) >> space? >> number.as(:right)
   end
 
-  rule :expression_list do
-    space? >> binary_expression >> space? >> (binary_operator >> number).maybe
+  rule :expression_list? do
+    space? >> (binary_operator >> number).maybe
   end
 
-  root :expression_list
+  rule :expression do
+    space? >> binary_expression >> expression_list?
+  end
+
+  root :expression
 
 end
 
