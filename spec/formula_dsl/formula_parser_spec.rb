@@ -21,16 +21,28 @@ describe FormulaParser do
       ast[:+][:left].to_i.should == 2
       ast[:+][:right].to_i.should == 5
     end
+  end
 
+  context "For more complex expressions (without functions)" do
     it "should recognize 2+5+10" do
       ast = parser.parse('2+5+10')
-
       ast[:+][:left].to_i.should == 2
       ast[:+][:right].should be_a Hash
       ast[:+][:right][:+].should_not nil
       ast[:+][:right][:+][:left].to_i.should == 5
       ast[:+][:right][:+][:right].to_i.should == 10
     end
+
+    it "should recognize 2*5*10" do
+      ast = parser.parse('2*5*10')
+      ast[:*][:left].to_i.should == 2
+      ast[:*][:right].should be_a Hash
+      ast[:*][:right][:*].should_not nil
+      ast[:*][:right][:*][:left].to_i.should == 5
+      ast[:*][:right][:*][:right].to_i.should == 10
+    end
+
+  end
 
     # it "should recognize subtract operations" do
     #   ast = parser.parse('2-5')
@@ -45,7 +57,6 @@ describe FormulaParser do
     # it "should raise error a incomplet expression like '1 +'" do
     #   lambda{ parser.parse("1 +") }.should raise_error(Parslet::ParseFailed)
     # end
-  end
 
   # context "For complex expression like '2 + 5 - 3' (sill without functions)" do
   #   it "should recognize '2 + 5 - 3' as a valid expression" do

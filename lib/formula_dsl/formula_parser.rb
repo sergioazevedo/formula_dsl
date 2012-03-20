@@ -19,7 +19,7 @@ class FormulaParser < Parslet::Parser
   end
 
   rule :right_term do
-    (addition | number).as(:right)
+    (expression | number).as(:right)
   end
 
   rule :multiplication do
