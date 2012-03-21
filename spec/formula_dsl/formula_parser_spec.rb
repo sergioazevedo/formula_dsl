@@ -25,10 +25,10 @@ describe FormulaParser do
       ast.to_s.should == %Q({:/=>{:left=>"2"@0, :right=>"2"@4}})
     end
 
-
-    # it "should recognize a function like 'Month(data)' " do
-    #   ast = parser.parse('Month(data)')
-    # end
+    it "should recognize a function like 'Month(data)' " do
+      ast = parser.parse('Month(data)')
+      puts ast.to_s
+    end
 
     # it "should recognize the expression 'Month(data) - 1' " do
     #   ast = parser.parse('Month(data) - 1')

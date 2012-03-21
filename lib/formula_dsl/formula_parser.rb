@@ -1,12 +1,22 @@
 #encoding: utf-8
 class FormulaParser < Parslet::Parser
 
+  # Single char rules
+  rule(:lparen) { str('(') >> space? }
+  rule(:rparen) { str(')') >> space? }
+  rule(:comma)  { str(',') >> space? }
+
   # non significant character's
   rule(:space)  { match('\s').repeat(1) }
   rule(:space?) { space.maybe }
 
   # Literal's
   rule(:number) { match('\d').repeat(1) }
+  rule(:identifier) { match['\w'].repeat(1) }
+
+  # Argument
+  rule (:argument) { identifier | number }
+  rule (:arglist)  { (argument >> comma.maybe).repeat }
 
   # Operators
   rule(:add_operator ) { match(['+']) }
@@ -31,8 +41,12 @@ class FormulaParser < Parslet::Parser
     ( number.as(:left) >> space? >> div_operator >> space? >> ( number ).as(:right) ).as(:/)
   end
 
+  rule :function do
+    identifier >> lparen >> arglist.as(:args) >> rparen
+  end
+
   rule :expression do
-    addition | subtraction | multiplication | division
+    function | addition | subtraction | multiplication | division
   end
 
   root :expression
