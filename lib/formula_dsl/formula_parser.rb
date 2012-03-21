@@ -24,6 +24,10 @@ class FormulaParser < Parslet::Parser
   rule(:mult_operator) { match(['*']) }
   rule(:div_operator ) { match(['/']) }
 
+  rule :operator do
+    add_operator | sub_operator | mult_operator | div_operator
+  end
+
   #binary operations + - / *
   rule :addition do
     ( number.as(:left) >> space? >> add_operator >> space? >> ( number ).as(:right) ).as(:+)
@@ -45,11 +49,35 @@ class FormulaParser < Parslet::Parser
     (identifier.as(:name) >> lparen >> arglist.as(:args) >> rparen).as(:function)
   end
 
-  rule :expression do
+  rule :single_expression do
     function | addition | subtraction | multiplication | division
   end
 
-  root :expression
+  # expression with other expression (compose expression)
+  # Ex: expression >> some_op >> number === [ Mont(data) - 1 ]
+  rule :subtraction_expression do
+    (single_expression.as(:left) >> space? >> sub_operator >> space? >> number.as(:right) ).as(:-)
+  end
+
+  rule :addition_expression do
+    (single_expression.as(:left) >> space? >> add_operator >> space? >> number.as(:right) ).as(:+)
+  end
+
+  rule :multiplication_expression do
+    (single_expression.as(:left) >> space? >> mult_operator >> space? >> number.as(:right) ).as(:*)
+  end
+
+  rule :division_expression do
+    (single_expression.as(:left) >> space? >> div_operator >> space? >> number.as(:right) ).as(:/)
+  end
+
+  rule :expression_list do
+     addition_expression | subtraction_expression | multiplication_expression | division_expression | single_expression
+  end
+
+
+  # Entry Point rule
+  root :expression_list
 
   # rule :addition do
   #   (number.as(:left) >> space? >> add_operator >> >> space? >> ( single_operations ).as(:right)).as(:+)
@@ -81,15 +109,3 @@ class FormulaParser < Parslet::Parser
 
   # root :list
 end
-
-#  expression = left_side operator rigth_side
-
-# a side can be:
-#   a number
-#   another expression
-
-# 1 + 1 => expression (l => 1 op => + r => 1)
-# 1 + 1 * 4 => expression ( l => 1 op => + r => { l})
-# 2 * 4 + 2
-
-# l: 2
