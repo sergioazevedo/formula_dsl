@@ -5,124 +5,76 @@ describe FormulaParser do
 
   let(:parser){ subject }
 
-  context "For simple expressions (without functions)" do
-    # it "should recognize multiply operations" do
-    #   ast = parser.parse('2*5')
-    #   ast[:*][:left].to_i.should == 2
-    #   ast[:*][:right].to_i.should == 5
-    # end
-    # it "should recognize division operations" do
-    #   ast = parser.parse('2/5')
-    #   ast[:/][:left].to_i.should == 2
-    #   ast[:/][:right].to_i.should == 5
-    # end
-  #   it "should recognize sum operations" do
-  #     ast = parser.parse('2+5')
-  #     ast[:+][:left].to_i.should == 2
-  #     ast[:+][:right].to_i.should == 5
-  #   end
-  end
+  context "Single Expression's" do
 
-  context "For more complex expressions (without functions)" do
-    # it "should recognize 2+5+10" do
-    #   ast = parser.parse('2+5+10')
-    #   ast[:+][:left].to_i.should == 2
-    #   ast[:+][:right].should be_a Hash
-    #   ast[:+][:right][:+].should_not nil
-    #   ast[:+][:right][:+][:left].to_i.should == 5
-    #   ast[:+][:right][:+][:right].to_i.should == 10
-    # end
-
-    # it "should recognize 2*5*10" do
-    #   ast = parser.parse('2*5*10')
-    #   ast[:*][:left].to_i.should == 2
-    #   ast[:*][:right].should be_a Hash
-    #   ast[:*][:right][:*].should_not nil
-    #   ast[:*][:right][:*][:left].to_i.should == 5
-    #   ast[:*][:right][:*][:right].to_i.should == 10
-    # end
-
-    it "should recognize 2*5+10" do
-      # ast = parser.parse('2-5')
-      # puts ast.inspect
-
-      ast = parser.parse('2+5')
-      puts ast.inspect
-      ast = parser.parse('2+5+10')
-      puts ast.inspect
-      ast = parser.parse('2*5')
-      puts ast.inspect
-      ast = parser.parse('2*5+10')
-      puts ast.inspect
-      ast = parser.parse('2*5+10+8')
-      puts ast.inspect
-      ast = parser.parse('2*5*2+10+8')
-      puts ast.inspect
-      ast = parser.parse('2+4*10')
-      puts ast.inspect
-      ast = parser.parse('2*5*5')
-      puts ast.inspect
-      ast = parser.parse('1+3+4+1+30*50*2+10+4+5')
-      puts ast
-      ast = parser.parse('2+5+3+4*4')
-      puts ast.inspect
-
-
-      # ast[:+][:left].should be_a Hash
-      # ast[:+][:right].to_i should == 10
-      # ast[:+][:right][:*].should_not nil
-      # ast[:+][:right][:*][:left].to_i.should == 2
-      # ast[:+][:right][:*][:right].to_i.should == 5
+    it "should recognize expression '2 + 1' " do
+      ast = parser.parse('2 + 1')
+      ast.to_s.should == %Q({:+=>{:left=>"2"@0, :right=>"1"@4}})
     end
 
+    it "should recognize expression '2 - 1" do
+      ast = parser.parse('2 - 1')
+      ast.to_s.should == %Q({:-=>{:left=>"2"@0, :right=>"1"@4}})
+    end
 
+    it "should recognize expression '2 * 1" do
+      ast = parser.parse('2 * 1')
+      ast.to_s.should == %Q({:*=>{:left=>"2"@0, :right=>"1"@4}})
+    end
+
+    it "should recognize expression '2 / 2" do
+      ast = parser.parse('2 / 2')
+      ast.to_s.should == %Q({:/=>{:left=>"2"@0, :right=>"2"@4}})
+    end
   end
 
-    # it "should recognize subtract operations" do
-    #   ast = parser.parse('2-5')
-    #   ast[:-][:left].to_i.should == 2
-    #   ast[:-][:right].to_i.should == 5
-    # end
+  context "Composed expression's " do
+    it "should recognize a function like 'Month(data)' " do
+      ast = parser.parse('Month(data)')
+      ast.to_s.should == %Q({:function=>{:name=>"Month"@0, :args=>"data"@6}})
+    end
 
-    # it "should recognize a valid expression with blank spaces like '  4   +   3  '" do
-    #   lambda{ parser.parse("  4   +  3  ") }.should_not raise_error
-    # end
+    it "should recognize the expression 'Month(data) - 1' " do
+      ast = parser.parse('Month(data) - 1')
+      ast.to_s.should == %Q({:-=>{:left=>{:function=>{:name=>"Month"@0, :args=>"data"@6}}, :right=>"1"@14}})
+    end
 
-    # it "should raise error a incomplet expression like '1 +'" do
-    #   lambda{ parser.parse("1 +") }.should raise_error(Parslet::ParseFailed)
-    # end
+    it "should recognize the expression 'Month(data) * 1' " do
+      ast = parser.parse('Month(data) * 1')
+      ast.to_s.should == %Q({:*=>{:left=>{:function=>{:name=>"Month"@0, :args=>"data"@6}}, :right=>"1"@14}})
+    end
 
-  # context "For complex expression like '2 + 5 - 3' (sill without functions)" do
-  #   it "should recognize '2 + 5 - 3' as a valid expression" do
-  #     ast = parser.parse("2 + 5 -3")
-  #     ast[:left].to_i.should == 2
-  #     ast[:operator].to_s.should == '+'
-  #     ast[:right].should be_a Hash
-  #     ast[:right][:left].to_i.should == 5
-  #     ast[:right][:operator].should == '-'
-  #     ast[:right][:right].to_i.should == 3
-  #   end
+    it "should recognize the expression 'Month(data) / 1' " do
+      ast = parser.parse('Month(data) / 1')
+      ast.to_s.should == %Q({:/=>{:left=>{:function=>{:name=>"Month"@0, :args=>"data"@6}}, :right=>"1"@14}})
+    end
 
-  #   it "should recognize '12 + 15 - 3 * 4 / 2' as a valid expression" do
-  #     ast = parser.parse("12 + 15 -3 * 4/2")
-  #     ast[:left].to_i.should == 12
-  #     ast[:operator].to_s.should == '+'
-  #     ast[:right].should be_a Hash
-  #     ast[:right][:left].to_i.should == 15
-  #     ast[:right][:operator].should == '-'
-  #     ast[:right][:right].should be_a Hash
-  #     ast[:right][:right][:left].to_i.should == 3
-  #     ast[:right][:right][:operator].should == '*'
-  #     ast[:right][:right][:right].should be_a Hash
-  #     ast[:right][:right][:right][:left].to_i.should == 4
-  #     ast[:right][:right][:right][:operator].should == '/'
-  #     ast[:right][:right][:right][:right].to_i.should == 2
-  #   end
+    it " should recognize expression with 2 functions 'Month(data) + Year(data)'" do
+      ast = parser.parse('Month(data) + Year(data)')
+      ast.to_s.should == %Q({:concat=>{:left=>{:function=>{:name=>"Month"@0, :args=>"data"@6}}, :right=>{:function=>{:name=>"Year"@14, :args=>"data"@19}}}})
+    end
+  end
 
-  #   it "should raise error a incomplet expression like '1 + 5 *" do
-  #     lambda{ parser.parse("1 + 5 *") }.should raise_error(Parslet::ParseFailed)
-  #   end
+  context "Expressions with string concatenation" do
+    it " should recognize expression with string concat \"A\" + \"B\"'" do
+      ast = parser.parse('"A" + "B"')
+      ast.to_s.should == %Q({:concat=>{:left=>"\\\"A\\\""@0, :right=>"\\\"B\\\""@6}})
+    end
 
-  # end
+    it " should recognize expression with string concat '\"A\" + \"B\" + \"C\" ' " do
+      ast = parser.parse('"A" + "B" + "C"')
+      ast.to_s.should == %Q({:concat=>{:left=>{:concat=>{:left=>"\\\"A\\\""@0, :right=>"\\\"B\\\""@6}}, :right=>"\\\"C\\\""@12}})
+    end
+
+    it " should recognize expression with string concat 'Month(data) + \"/\"'" do
+      ast = parser.parse('Month(data) + "/"')
+      ast.to_s.should == %Q({:concat=>{:left=>{:function=>{:name=>"Month"@0, :args=>"data"@6}}, :right=>"\\\"/\\\""@14}})
+    end
+
+    it " should recognize expression with string concat 'Month(data) + \"/\" + Year(data)'" do
+      ast = parser.parse('Month(data) + "/" + Year(data)')
+      ast.to_s.should == %Q({:concat=>{:left=>{:function=>{:name=>"Month"@0, :args=>"data"@6}}, :right=>{:concat=>{:left=>"\\\"/\\\""@14, :right=>{:function=>{:name=>"Year"@20, :args=>"data"@25}}}}}})
+    end
+  end
 
 end
