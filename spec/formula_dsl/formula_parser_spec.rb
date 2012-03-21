@@ -27,7 +27,7 @@ describe FormulaParser do
 
     it "should recognize a function like 'Month(data)' " do
       ast = parser.parse('Month(data)')
-      puts ast.to_s
+      ast.to_s.should == %Q({:function=>{:name=>"Month"@0, :args=>"data"@6}})
     end
 
     # it "should recognize the expression 'Month(data) - 1' " do

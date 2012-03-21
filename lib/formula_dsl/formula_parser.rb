@@ -42,7 +42,7 @@ class FormulaParser < Parslet::Parser
   end
 
   rule :function do
-    identifier >> lparen >> arglist.as(:args) >> rparen
+    (identifier.as(:name) >> lparen >> arglist.as(:args) >> rparen).as(:function)
   end
 
   rule :expression do
