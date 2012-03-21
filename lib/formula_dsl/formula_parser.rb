@@ -85,37 +85,6 @@ class FormulaParser < Parslet::Parser
     string_concat_expression | addition_expression | subtraction_expression | multiplication_expression | division_expression | single_expression
   end
 
-
   # Entry Point rule
   root :expression_list
-
-  # rule :addition do
-  #   (number.as(:left) >> space? >> add_operator >> >> space? >> ( single_operations ).as(:right)).as(:+)
-  # end
-
-  # rule :multiplication do
-  #   (number.as(:left) >> mult_operator >> (multiplication | number).as(:right)).as(:*)
-  # end
-
-  # rule :multiplication_expression do
-  #   ( ( single_operations ).as(:left) >> add_operator >> (addition | number).as(:right) ).as(:+)
-  # end
-
-  # rule :addition_expression do
-  #   ( addition >> mult_operator >> (multiplication | number).as(:right) )
-  # end
-
-  # rule :expression do
-  #    multiplication_expression | addition_expression
-  # end
-
-  # rule :single_operations do
-  #   addition | multiplication | number
-  # end
-
-  # rule :list do
-  #   expression | single_operations
-  # end
-
-  # root :list
 end
