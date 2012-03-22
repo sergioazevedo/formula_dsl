@@ -17,8 +17,8 @@ Jeweler::Tasks.new do |gem|
   gem.name = "formula_dsl"
   gem.homepage = "http://github.com/sergiojunior/formula_dsl"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = %Q{ External DSL that creates AST representation (Hash) for a given mathematical expression. }
+  gem.description = %Q{ External DSL to express math operations like you do in MSExcel formula bar. The parser generate a AST (Hash) for a given expression. }
   gem.email = "sergior.jr@gmail.com"
   gem.authors = ["Sergio Junior"]
   # dependencies defined in Gemfile
