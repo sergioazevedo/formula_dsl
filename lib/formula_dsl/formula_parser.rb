@@ -52,7 +52,7 @@ class FormulaParser < Parslet::Parser
   end
 
   rule :string_concat do
-    ( string.as(:left) >> space? >> add_operator >> space? >> ( string ).as(:right) ).as(:concat)
+    ( string.as(:left) >> space? >> add_operator >> space? >> ( string ).as(:right) ).as(:+)
   end
 
   rule :single_expression do
@@ -66,7 +66,7 @@ class FormulaParser < Parslet::Parser
   end
 
   rule :addition_expression do
-    (single_expression.as(:left) >> space? >> add_operator >> space? >> (single_expression | number).as(:right) ).as(:+)
+    (single_expression.as(:left) >> space? >> add_operator >> space? >> ( expression_list | number ).as(:right) ).as(:+)
   end
 
   rule :multiplication_expression do
@@ -78,11 +78,11 @@ class FormulaParser < Parslet::Parser
   end
 
   rule :string_concat_expression do
-    (single_expression.as(:left) >> space? >> add_operator >> space? >> ( expression_list | string ).as(:right) ).as(:concat)
+    (single_expression.as(:left) >> space? >> add_operator >> space? >> ( expression_list | string ).as(:right) ).as(:+)
   end
 
   rule :expression_list do
-    string_concat_expression | addition_expression | subtraction_expression | multiplication_expression | division_expression | single_expression
+    addition_expression | subtraction_expression | multiplication_expression | division_expression | string_concat_expression | single_expression
   end
 
   # Entry Point rule
