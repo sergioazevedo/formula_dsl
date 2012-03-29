@@ -6,7 +6,7 @@ describe AstResolver do
   let(:parser){ FormulaParser.new }
   let(:resolver){ subject }
 
-  context "Single Expression's" do
+  context "Resolving Expression's" do
 
     it "should resolve ast '2 + 1' as BinaryOperation" do
       ast = parser.parse('2 + 1')
@@ -15,6 +15,7 @@ describe AstResolver do
       expression.operator.should   == :+
       expression.left_term.should  == 2
       expression.right_term.should == 1
+      puts expression.apply
     end
 
     it "should resolve ast '2 + 1 - 4' as BinaryOperation with contains antoher BinaryOperation" do
@@ -25,6 +26,7 @@ describe AstResolver do
       expression.left_term.should be == BinaryOperation.new(:+,2,1)
       expression.right_term.should == 4
       expression.operator.should == :-
+      puts expression.apply
     end
 
     it "should resolve ast 'Month(data) as Function" do
@@ -33,7 +35,7 @@ describe AstResolver do
       expression.should be_a_kind_of Function
       expression.name.should == 'Month'
       expression.args.should == ['data']
-
+      puts expression.apply
     end
 
     it "should resolve ast 'Month(data) + Year(data) as Binary operation wich conatins 2 Function as left and right terms" do
@@ -43,7 +45,7 @@ describe AstResolver do
       expression.operator.should      == :+
       expression.left_term.should be  == Function.new('Month','data')
       expression.right_term.should be == Function.new('Year','data')
-
+      puts expression.apply
     end
 
     it "should resolve 'Month(data) + \"/\" + Year(data)' as BinaryOperation wich contains Function and another BinaryOperation" do
@@ -52,7 +54,8 @@ describe AstResolver do
       expression.should be_a_kind_of BinaryOperation
       expression.operator.should   == :+
       expression.left_term.should  == Function.new('Month','data')
-      expression.right_term.should == BinaryOperation.new(:+,'/',Function.new('Year','data'))
+      expression.right_term.should == BinaryOperation.new(:+,"'/'",Function.new('Year','data'))
+      puts expression.apply
     end
 
   end

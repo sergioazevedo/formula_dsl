@@ -3,11 +3,12 @@
 class AstResolver
 
   def apply( ast )
-    # {:+=>{:left=>"2"@0, :right=>"1"@4}}
     expression = parse(ast)
 
     expression
   end
+
+private
 
   def parse( hash )
     if hash.keys.size == 1
@@ -52,7 +53,7 @@ class AstResolver
       parse( side )
     else
       if (/"(?<value>.)"/ =~ side.to_str)
-        value
+        "'#{value}'"
       elsif (/(?<value>\d+)/ =~ side.str)
         value.to_i
       else
