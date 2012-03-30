@@ -10,7 +10,7 @@ module FormulaDSL
     specify { should respond_to(:right_term) }
     specify { should respond_to(:apply) }
 
-    it "should be considered equal to a another Function if that function contains same data" do
+    it "should be considered equal to a another BinaryExpression if that function contains same data" do
       subject.should == BinaryExpression.new(:+, 3, 2)
     end
 
