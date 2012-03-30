@@ -1,12 +1,19 @@
 #encoding: utf-8
 
 module FormulaDSL
+  class MissingFunctionError < RuntimeError
+  end
+
   module FunctionExpressionFactory
 
     def self.new(function_name)
-      function = constantize("FormulaDSL::Functions::#{function_name.upcase}")
+      begin
+        function = constantize("FormulaDSL::Functions::#{function_name.upcase}")
 
-      function
+        function
+      rescue(NameError)
+        raise MissingFunctionError, "If you want to use the function #{function_name} you must implement that as a proc named FormulaDSL::Functions::#{function_name.upcase}"
+      end
     end
 
     private
