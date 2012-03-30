@@ -23,5 +23,9 @@ module FormulaDSL
       subject.new(:/).should be == FormulaDSL::BinaryOperations::DIVISION
     end
 
+    it "should raise FormulaDSL::MissingBinaryOperation for a unknown operator " do
+      lambda{ subject.new('abc') }.should raise_error(MissingBinaryOperationError)
+    end
+
   end
 end
