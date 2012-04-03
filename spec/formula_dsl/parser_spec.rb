@@ -34,6 +34,34 @@ module FormulaDSL
       end
     end
 
+    context "Expressions based on identifier names (aka variables)" do
+      it "should recognize expression 'budget + fee' " do
+        ast = parser.parse('budget + fee')
+        ast.to_s.should == %Q({:+=>{:left=>"budget"@0, :right=>"fee"@9}})
+      end
+
+      it "should recognize expression 'budget - fee' " do
+        ast = parser.parse('budget - fee')
+        ast.to_s.should == %Q({:-=>{:left=>"budget"@0, :right=>"fee"@9}})
+      end
+
+      it "should recognize expression 'budget * fee' " do
+        ast = parser.parse('budget * fee')
+        ast.to_s.should == %Q({:*=>{:left=>"budget"@0, :right=>"fee"@9}})
+      end
+
+      it "should recognize expression 'budget + 1 + fee' " do
+        ast = parser.parse('budget + 1 + fee')
+        ast.to_s.should == %Q({:+=>{:left=>{:+=>{:left=>"budget"@0, :right=>"1"@9}}, :right=>"fee"@13}})
+      end
+
+      it "should recognize expression 'budget * 1 + fee' " do
+        ast = parser.parse('budget * 1 + fee')
+        ast.to_s.should == %Q({:+=>{:left=>{:*=>{:left=>"budget"@0, :right=>"1"@9}}, :right=>"fee"@13}})
+      end
+
+    end
+
     context "Composed expression's " do
       it "should recognize a function like 'Month(data)' " do
         ast = parser.parse('Month(data)')

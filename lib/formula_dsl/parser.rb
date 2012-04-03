@@ -33,19 +33,19 @@ module FormulaDSL
 
     #binary operations + - / *
     rule :addition do
-      ( number.as(:left) >> space? >> add_operator >> space? >> ( number ).as(:right) ).as(:+)
+      ( argument.as(:left) >> space? >> add_operator >> space? >> ( argument ).as(:right) ).as(:+)
     end
 
     rule :subtraction do
-      ( number.as(:left) >> space? >> sub_operator >> space? >> ( number ).as(:right) ).as(:-)
+      ( argument.as(:left) >> space? >> sub_operator >> space? >> ( argument ).as(:right) ).as(:-)
     end
 
     rule :multiplication do
-      ( number.as(:left) >> space? >> mult_operator >> space? >> ( number ).as(:right) ).as(:*)
+      ( argument.as(:left) >> space? >> mult_operator >> space? >> ( argument ).as(:right) ).as(:*)
     end
 
     rule :division do
-      ( number.as(:left) >> space? >> div_operator >> space? >> ( number ).as(:right) ).as(:/)
+      ( argument.as(:left) >> space? >> div_operator >> space? >> ( argument ).as(:right) ).as(:/)
     end
 
     rule :function do
@@ -63,19 +63,19 @@ module FormulaDSL
     # expression with other expression (compose expression)
     # Ex: expression >> some_op >> number === [ Mont(data) - 1 ]
     rule :subtraction_expression do
-      (single_expression.as(:left) >> space? >> sub_operator >> space? >> ( expression_list | number).as(:right) ).as(:-)
+      (single_expression.as(:left) >> space? >> sub_operator >> space? >> ( expression_list | argument).as(:right) ).as(:-)
     end
 
     rule :addition_expression do
-      (single_expression.as(:left) >> space? >> add_operator >> space? >> ( expression_list | number ).as(:right) ).as(:+)
+      (single_expression.as(:left) >> space? >> add_operator >> space? >> ( expression_list | argument ).as(:right) ).as(:+)
     end
 
     rule :multiplication_expression do
-      (single_expression.as(:left) >> space? >> mult_operator >> space? >> (expression_list | number).as(:right) ).as(:*)
+      (single_expression.as(:left) >> space? >> mult_operator >> space? >> (expression_list | argument).as(:right) ).as(:*)
     end
 
     rule :division_expression do
-      (single_expression.as(:left) >> space? >> div_operator >> space? >> (expression_list | number).as(:right) ).as(:/)
+      (single_expression.as(:left) >> space? >> div_operator >> space? >> (expression_list | argument).as(:right) ).as(:/)
     end
 
     rule :string_concat_expression do
