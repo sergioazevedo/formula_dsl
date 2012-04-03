@@ -81,6 +81,22 @@ module FormulaDSL
         ast = parser.parse('Month(data) + "/" + Year(data)')
         ast.to_s.should == %Q({:+=>{:left=>{:function=>{:name=>"Month"@0, :args=>"data"@6}}, :right=>{:+=>{:left=>"\\\"/\\\""@14, :right=>{:function=>{:name=>"Year"@20, :args=>"data"@25}}}}}})
       end
+
+      it " should recognize expression with string concat 'Month(data) - 1 + \"/\" + Year(data)'" do
+        ast = parser.parse('Month(data) - 1 + "/" + Year(data)')
+        ast.to_s.should == %Q({:-=>{:left=>{:function=>{:name=>\"Month\"@0, :args=>\"data\"@6}}, :right=>{:+=>{:left=>\"1\"@14, :right=>{:+=>{:left=>\"\\\"/\\\"\"@18, :right=>{:function=>{:name=>\"Year\"@24, :args=>\"data\"@29}}}}}}}})
+      end
+
+      it " should recognize expression with string concat 'Month(data) - 1 + \"/\" + Year(data)'" do
+        ast = parser.parse('Month(data) * 1 + "/" + Year(data)')
+        ast.to_s.should == %Q({:*=>{:left=>{:function=>{:name=>\"Month\"@0, :args=>\"data\"@6}}, :right=>{:+=>{:left=>\"1\"@14, :right=>{:+=>{:left=>\"\\\"/\\\"\"@18, :right=>{:function=>{:name=>\"Year\"@24, :args=>\"data\"@29}}}}}}}})
+      end
+
+      it " should recognize expression with string concat 'Month(data) - 1 + \"/\" + Year(data)'" do
+        ast = parser.parse('Month(data) / 1 + "/" + Year(data)')
+        ast.to_s.should == %Q({:/=>{:left=>{:function=>{:name=>\"Month\"@0, :args=>\"data\"@6}}, :right=>{:+=>{:left=>\"1\"@14, :right=>{:+=>{:left=>\"\\\"/\\\"\"@18, :right=>{:function=>{:name=>\"Year\"@24, :args=>\"data\"@29}}}}}}}})
+      end
+
     end
 
   end

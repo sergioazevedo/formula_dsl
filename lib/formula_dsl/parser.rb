@@ -63,7 +63,7 @@ module FormulaDSL
     # expression with other expression (compose expression)
     # Ex: expression >> some_op >> number === [ Mont(data) - 1 ]
     rule :subtraction_expression do
-      (single_expression.as(:left) >> space? >> sub_operator >> space? >> (single_expression | number).as(:right) ).as(:-)
+      (single_expression.as(:left) >> space? >> sub_operator >> space? >> ( expression_list | number).as(:right) ).as(:-)
     end
 
     rule :addition_expression do
@@ -71,11 +71,11 @@ module FormulaDSL
     end
 
     rule :multiplication_expression do
-      (single_expression.as(:left) >> space? >> mult_operator >> space? >> (single_expression | number).as(:right) ).as(:*)
+      (single_expression.as(:left) >> space? >> mult_operator >> space? >> (expression_list | number).as(:right) ).as(:*)
     end
 
     rule :division_expression do
-      (single_expression.as(:left) >> space? >> div_operator >> space? >> (single_expression | number).as(:right) ).as(:/)
+      (single_expression.as(:left) >> space? >> div_operator >> space? >> (expression_list | number).as(:right) ).as(:/)
     end
 
     rule :string_concat_expression do
