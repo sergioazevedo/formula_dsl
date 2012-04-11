@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "formula_dsl"
-  s.version = "0.3.0"
+  s.version = "0.4.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Sergio Junior"]
-  s.date = "2012-04-03"
+  s.date = "2012-04-11"
   s.description = " External DSL to express math operations like you do in MSExcel formula bar. The parser generate a AST (Hash) for a given expression. "
   s.email = "sergior.jr@gmail.com"
   s.extra_rdoc_files = [
