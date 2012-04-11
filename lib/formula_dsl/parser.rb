@@ -16,11 +16,11 @@ module FormulaDSL
     rule(:number)     { match('\d').repeat(1) }
     rule(:quote)      { match('"') }
     rule(:identifier) { match['\w'].repeat(1) }
-    rule(:string)     { quote >> space? >> (identifier | number | operator | comma | dot) >> space? >> quote}
+    rule(:string)     { quote >> space? >> (str('"').absnt? >> any).repeat(1) >> space? >> quote}
 
     # Argument
-    rule (:argument) { identifier | number }
-    rule (:arglist)  { (argument >> comma.maybe).repeat }
+    rule (:argument) { function | identifier | number | string}
+    rule (:arglist)  { ( argument >> comma.maybe).repeat }
 
     # Operators
     rule(:add_operator ) { match(['+']) }

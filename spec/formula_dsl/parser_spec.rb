@@ -72,12 +72,35 @@ module FormulaDSL
 
     end
 
-    context "Composed expression's " do
+    context "Functions" do
+      it "should recognize functions with string arguments 'FormatDate(\"MM/yyyy\")'" do
+        ast = parser.parse('FormatDate("MM/yyyy")')
+        ast.to_s.should == %Q({:function=>{:name=>"FormatDate"@0, :args=>"\\\"MM/yyyy\\\""@11}})
+      end
+
       it "should recognize a function like 'Month(data)' " do
         ast = parser.parse('Month(data)')
         ast.to_s.should == %Q({:function=>{:name=>"Month"@0, :args=>"data"@6}})
       end
 
+      it "should recognize expression with composed functions 'Max( Year(data) )'" do
+        ast = parser.parse('Max( Year(data) )')
+        ast.to_s.should == %Q({:function=>{:name=>"Max"@0, :args=>[{:function=>{:name=>"Year"@5, :args=>"data"@10}}]}})
+      end
+
+      it "should recognize expression with composed functions with 2 arguments 'Max( Year(data), Month(data) )'" do
+        ast = parser.parse('Max(Year(data), Month(data))')
+        ast.to_s.should == %Q({:function=>{:name=>"Max"@0, :args=>[{:function=>{:name=>"Year"@4, :args=>"data"@9}}, {:function=>{:name=>"Month"@16, :args=>"data"@22}}]}})
+      end
+
+      it "should recognize expression with composed functions with 2 arguments 'FormatDate( PriorMonth(data), \"MM/yyyy\" )'" do
+        ast = parser.parse('FormatDate( PriorMonth(data), "MM/yyyy")')
+        ast.to_s.should == %Q({:function=>{:name=>"FormatDate"@0, :args=>[{:function=>{:name=>"PriorMonth"@12, :args=>"data"@23}}]}})
+      end
+
+    end
+
+    context "Composed expression's " do
       it "should recognize the expression 'Month(data) - 1' " do
         ast = parser.parse('Month(data) - 1')
         ast.to_s.should == %Q({:-=>{:left=>{:function=>{:name=>"Month"@0, :args=>"data"@6}}, :right=>"1"@14}})
@@ -97,6 +120,7 @@ module FormulaDSL
         ast = parser.parse('Month(data) + Year(data)')
         ast.to_s.should == %Q({:+=>{:left=>{:function=>{:name=>"Month"@0, :args=>"data"@6}}, :right=>{:function=>{:name=>"Year"@14, :args=>"data"@19}}}})
       end
+
     end
 
     context "Expressions with string concatenation" do
@@ -122,17 +146,17 @@ module FormulaDSL
 
       it " should recognize expression with string concat 'Month(data) - 1 + \"/\" + Year(data)'" do
         ast = parser.parse('Month(data) - 1 + "/" + Year(data)')
-        ast.to_s.should == %Q({:-=>{:left=>{:function=>{:name=>\"Month\"@0, :args=>\"data\"@6}}, :right=>{:+=>{:left=>\"1\"@14, :right=>{:+=>{:left=>\"\\\"/\\\"\"@18, :right=>{:function=>{:name=>\"Year\"@24, :args=>\"data\"@29}}}}}}}})
+        ast.to_s.should == %Q({:-=>{:left=>{:function=>{:name=>"Month"@0, :args=>"data"@6}}, :right=>{:+=>{:left=>{:+=>{:left=>"1"@14, :right=>"\\\"/\\\""@18}}, :right=>{:function=>{:name=>"Year"@24, :args=>"data"@29}}}}}})
       end
 
       it " should recognize expression with string concat 'Month(data) - 1 + \"/\" + Year(data)'" do
         ast = parser.parse('Month(data) * 1 + "/" + Year(data)')
-        ast.to_s.should == %Q({:*=>{:left=>{:function=>{:name=>\"Month\"@0, :args=>\"data\"@6}}, :right=>{:+=>{:left=>\"1\"@14, :right=>{:+=>{:left=>\"\\\"/\\\"\"@18, :right=>{:function=>{:name=>\"Year\"@24, :args=>\"data\"@29}}}}}}}})
+        ast.to_s.should == %Q({:*=>{:left=>{:function=>{:name=>"Month"@0, :args=>"data"@6}}, :right=>{:+=>{:left=>{:+=>{:left=>"1"@14, :right=>"\\\"/\\\""@18}}, :right=>{:function=>{:name=>"Year"@24, :args=>"data"@29}}}}}})
       end
 
       it " should recognize expression with string concat 'Month(data) - 1 + \"/\" + Year(data)'" do
         ast = parser.parse('Month(data) / 1 + "/" + Year(data)')
-        ast.to_s.should == %Q({:/=>{:left=>{:function=>{:name=>\"Month\"@0, :args=>\"data\"@6}}, :right=>{:+=>{:left=>\"1\"@14, :right=>{:+=>{:left=>\"\\\"/\\\"\"@18, :right=>{:function=>{:name=>\"Year\"@24, :args=>\"data\"@29}}}}}}}})
+        ast.to_s.should == %Q({:/=>{:left=>{:function=>{:name=>"Month"@0, :args=>"data"@6}}, :right=>{:+=>{:left=>{:+=>{:left=>"1"@14, :right=>"\\\"/\\\""@18}}, :right=>{:function=>{:name=>"Year"@24, :args=>"data"@29}}}}}})
       end
 
     end
