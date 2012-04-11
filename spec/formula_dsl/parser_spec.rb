@@ -8,6 +8,16 @@ module FormulaDSL
 
     context "Single Expression's" do
 
+      it "should recognize a number '2' " do
+        ast = parser.parse('2')
+        ast.to_s.should == '2'
+      end
+
+      it "should recognize a string '\"abc\"' " do
+        ast = parser.parse('"abc"')
+        ast.to_s.should == %Q("abc")
+      end
+
       it "should recognize expression '2 + 1' " do
         ast = parser.parse('2 + 1')
         ast.to_s.should == %Q({:+=>{:left=>"2"@0, :right=>"1"@4}})

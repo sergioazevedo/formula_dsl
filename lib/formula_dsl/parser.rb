@@ -6,6 +6,7 @@ module FormulaDSL
     rule(:lparen) { str('(') >> space? }
     rule(:rparen) { str(')') >> space? }
     rule(:comma)  { str(',') >> space? }
+    rule(:dot)    { str('.') >> space? }
 
     # non significant character's
     rule(:space)  { match('\s').repeat(1) }
@@ -14,8 +15,8 @@ module FormulaDSL
     # Literal's
     rule(:number)     { match('\d').repeat(1) }
     rule(:quote)      { match('"') }
-    rule(:string)     { quote >> space? >> match('.') >> space? >> quote}
     rule(:identifier) { match['\w'].repeat(1) }
+    rule(:string)     { quote >> space? >> (identifier | number | operator | comma | dot) >> space? >> quote}
 
     # Argument
     rule (:argument) { identifier | number }
